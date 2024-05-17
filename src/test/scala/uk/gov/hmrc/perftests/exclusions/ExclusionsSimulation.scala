@@ -16,20 +16,10 @@
 
 package uk.gov.hmrc.perftests.exclusions
 
-import Utility.Client.clearAll
 import uk.gov.hmrc.performance.simulation.PerformanceTestRunner
 import uk.gov.hmrc.perftests.exclusions.ExclusionsRequests._
 
 class ExclusionsSimulation extends PerformanceTestRunner {
-
-  val registrationBaseUrl: String = baseUrlFor("one-stop-shop-registration-frontend")
-
-  before {
-    println("Clearing the performance tests registrations from the database")
-    clearAll(s"$registrationBaseUrl/pay-vat-on-goods-sold-to-eu/northern-ireland-register/test-only/delete-accounts")
-  }
-
-//  Will need to use registration stub for staging to provide registrations - assuming stub needs updating for this and will need config
 
   setup("exclusionsMoveCountry", "Exclusions - Move Country Journey") withRequests
     (

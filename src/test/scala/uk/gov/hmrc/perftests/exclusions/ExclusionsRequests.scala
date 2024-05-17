@@ -26,9 +26,9 @@ import java.time.LocalDate
 
 object ExclusionsRequests extends ServicesConfiguration {
 
-  val baseUrl: String   = baseUrlFor("one-stop-shop-exclusions-frontend")
-  val route: String     = "/pay-vat-on-goods-sold-to-eu/leave-one-stop-shop"
-  val loginUrl: String  = baseUrlFor("auth-login-stub")
+  val baseUrl: String  = baseUrlFor("one-stop-shop-exclusions-frontend")
+  val route: String    = "/pay-vat-on-goods-sold-to-eu/leave-one-stop-shop"
+  val loginUrl: String = baseUrlFor("auth-login-stub")
 
   def inputSelectorByName(name: String): Expression[String] = s"input[name='$name']"
 
@@ -36,7 +36,6 @@ object ExclusionsRequests extends ServicesConfiguration {
     http("Get Authority Wizard page")
       .get(loginUrl + s"/auth-login-stub/gg-sign-in")
       .check(status.in(200, 303))
-
 
   def postAuthorityWizard: HttpRequestBuilder =
     http("Enter Auth login credentials ")
@@ -221,6 +220,5 @@ object ExclusionsRequests extends ServicesConfiguration {
       .formParam("value.year", s"${LocalDate.now().getYear}")
       .check(status.in(200, 303))
       .check(header("Location").is(s"$route/successful"))
-
 
 }
