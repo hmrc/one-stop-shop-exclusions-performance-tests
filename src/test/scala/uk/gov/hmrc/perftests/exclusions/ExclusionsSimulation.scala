@@ -21,12 +21,51 @@ import uk.gov.hmrc.perftests.exclusions.ExclusionsRequests._
 
 class ExclusionsSimulation extends PerformanceTestRunner {
 
-  setup("exclusions", "Exclusions Journey") withRequests
+  setup("exclusionsMoveCountry", "Exclusions - Move Country Journey") withRequests
     (
       getAuthorityWizard,
       postAuthorityWizard,
-      getHomePage
+      getMoveCountry,
+      postMoveCountry(true),
+      getEuCountry,
+      postEuCountry,
+      getMoveDate,
+      postMoveDate,
+      getTaxNumber,
+      postTaxNumber,
+      getCheckYourAnswers,
+      postCheckYourAnswers,
+      getSuccessful
     )
+
+  setup("exclusionsStoppedSellingGoods", "Exclusions - Stopped Selling Eligible Goods Journey") withRequests
+    (
+      getAuthorityWizard,
+      postAuthorityWizard,
+      getMoveCountry,
+      postMoveCountry(false),
+      getStoppedSellingGoods,
+      postStoppedSellingGoods(true),
+      getStoppedSellingGoodsDate,
+      postStoppedSellingGoodsDate,
+      getSuccessful
+    )
+
+  setup("exclusionsVoluntary", "Exclusions - Voluntary Journey") withRequests
+    (
+      getAuthorityWizard,
+      postAuthorityWizard,
+      getMoveCountry,
+      postMoveCountry(false),
+      getStoppedSellingGoods,
+      postStoppedSellingGoods(false),
+      getLeaveScheme,
+      postLeaveScheme,
+      getStoppedUsingServiceDate,
+      postStoppedUsingServiceDate,
+      getSuccessful
+    )
+
   runSimulation()
 
 }
