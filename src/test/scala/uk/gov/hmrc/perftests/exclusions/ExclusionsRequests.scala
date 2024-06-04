@@ -59,6 +59,28 @@ object ExclusionsRequests extends ServicesConfiguration {
       .check(status.in(200, 303))
       .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
 
+  def postAuthorityWizardReversal: HttpRequestBuilder =
+    http("Enter Auth login credentials ")
+      .post(loginUrl + s"/auth-login-stub/gg-sign-in")
+      .formParam("authorityId", "")
+      .formParam("gatewayToken", "")
+      .formParam("credentialStrength", "strong")
+      .formParam("confidenceLevel", "50")
+      .formParam("affinityGroup", "Organisation")
+      .formParam("email", "user@test.com")
+      .formParam("credentialRole", "User")
+      .formParam("redirectionUrl", baseUrl + route)
+      .formParam("enrolment[0].name", "HMRC-MTD-VAT")
+      .formParam("enrolment[0].taxIdentifier[0].name", "VRN")
+      .formParam("enrolment[0].taxIdentifier[0].value", "100000027")
+      .formParam("enrolment[0].state", "Activated")
+      .formParam("enrolment[1].name", "HMRC-OSS-ORG")
+      .formParam("enrolment[1].taxIdentifier[0].name", "VRN")
+      .formParam("enrolment[1].taxIdentifier[0].value", "100000027")
+      .formParam("enrolment[1].state", "Activated")
+      .check(status.in(200, 303))
+      .check(headerRegex("Set-Cookie", """mdtp=(.*)""").saveAs("mdtpCookie"))
+
   def getMoveCountry =
     http("Get Move Country page")
       .get(s"$baseUrl$route/move-country")
@@ -220,5 +242,26 @@ object ExclusionsRequests extends ServicesConfiguration {
       .formParam("value.year", s"${LocalDate.now().getYear}")
       .check(status.in(200, 303))
       .check(header("Location").is(s"$route/successful"))
+
+  def getCancelLeaveScheme =
+    http("Get Cancel Leave Scheme page")
+      .get(s"$baseUrl$route/cancel-leave-scheme")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(css(inputSelectorByName("csrfToken"), "value").saveAs("csrfToken"))
+      .check(status.in(200))
+
+  def postCancelLeaveScheme =
+    http("Post Cancel Leave Scheme")
+      .post(s"$baseUrl$route/cancel-leave-scheme")
+      .formParam("csrfToken", "${csrfToken}")
+      .formParam("value", true)
+      .check(status.in(200, 303))
+      .check(header("Location").is(s"$route/cancel-leave-scheme-acknowledgement"))
+
+  def getCancelLeaveSchemeAcknowledgement =
+    http("Get Cancel Leave Scheme Acknowledgement page")
+      .get(s"$baseUrl$route/cancel-leave-scheme-acknowledgement")
+      .header("Cookie", "mdtp=${mdtpCookie}")
+      .check(status.in(200))
 
 }

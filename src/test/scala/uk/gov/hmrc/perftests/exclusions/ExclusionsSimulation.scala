@@ -66,6 +66,15 @@ class ExclusionsSimulation extends PerformanceTestRunner {
       getSuccessful
     )
 
+  setup("reversal", "Exclusions - Reversal Journey") withRequests
+    (
+      getAuthorityWizard,
+      postAuthorityWizardReversal,
+      getCancelLeaveScheme,
+      postCancelLeaveScheme,
+      getCancelLeaveSchemeAcknowledgement
+    )
+
   runSimulation()
 
 }
